@@ -1,0 +1,50 @@
+:root {
+  --bg: #060d06;
+  --card: rgba(10, 25, 10, 0.88);
+  --primary: #2e6b2e;
+  --accent: #56b056;
+  --glow: rgba(86, 176, 86, 0.5);
+  --text: #e2f0e2;
+  --muted: #7aaa7a;
+  --border: rgba(86, 176, 86, 0.22);
+  --purple: rgba(110, 30, 160, 0.35);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.72)),
+    url('/bosque.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  min-height: 100vh;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  font-family: inherit;
+}
+
+input, select, textarea {
+  font-family: inherit;
+}
+
+#root {
+  min-height: 100vh;
+}
