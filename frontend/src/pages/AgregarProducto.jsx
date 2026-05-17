@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import axios from 'axios'
 import './AgregarProducto.css'
 
 function AgregarProducto() {
@@ -34,15 +35,13 @@ function AgregarProducto() {
     }
     setEnviando(true)
     try {
-      // Aquí va la llamada real al backend:
-      // await axios.post('http://localhost:3000/api/productos', form)
-      await new Promise(r => setTimeout(r, 1400))
+      await axios.post('/api/productos', form)
       setExito(true)
       setForm({ nombre: '', categoria: '', precio: '', descripcion: '' })
       setErrores({})
       setTimeout(() => setExito(false), 3500)
-    } catch {
-      setErrorGeneral('Ocurrió un error al guardar. Intenta de nuevo.')
+    } catch (err) {
+      setErrorGeneral(err.response?.data?.mensaje || 'Ocurrió un error al guardar. Intenta de nuevo.')
     } finally {
       setEnviando(false)
     }

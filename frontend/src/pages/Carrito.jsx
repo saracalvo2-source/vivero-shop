@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
 import './Carrito.css'
 
 function Carrito() {
   const [carrito, setCarrito] = useState([])
   const [pedidoEnviado, setPedidoEnviado] = useState(false)
   const [enviando, setEnviando] = useState(false)
+  const [error, setError] = useState('')
 
   useEffect(() => {
     const guardado = JSON.parse(localStorage.getItem('carrito') || '[]')
@@ -29,13 +31,14 @@ function Carrito() {
 
   const realizarPedido = async () => {
     setEnviando(true)
+    setError('')
     try {
-      // Aquí va la llamada real al backend:
-      // await axios.post('http://localhost:3000/api/pedidos', { items: carrito })
-      await new Promise(r => setTimeout(r, 1500))
+      await axios.post('/api/pedidos', { items: carrito })
       setPedidoEnviado(true)
       setCarrito([])
       localStorage.removeItem('carrito')
+    } catch (err) {
+      setError(err.response?.data?.mensaje || 'Error al procesar el pedido. Intenta de nuevo.')
     } finally {
       setEnviando(false)
     }
@@ -57,6 +60,8 @@ function Carrito() {
   return (
     <div className="carrito-page">
       <h1>🛒 Mi Carrito</h1>
+
+      {error && <div className="alerta error-gen">❌ {error}</div>}
 
       {carrito.length === 0 ? (
         <div className="carrito-vacio">

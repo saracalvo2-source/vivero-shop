@@ -1,27 +1,46 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 import './Catalogo.css'
 
-const productosDemo = [
-  { id: 1, nombre: 'Monstera Deliciosa', categoria: 'Interior', precio: 45000, descripcion: 'Planta tropical de gran tamaño, perfecta para interiores luminosos.', emoji: '🌿' },
-  { id: 2, nombre: 'Cactus San Pedro', categoria: 'Exterior', precio: 28000, descripcion: 'Cactus resistente y de bajo mantenimiento, ideal para jardines.', emoji: '🌵' },
-  { id: 3, nombre: 'Orquídea Phalaenopsis', categoria: 'Flores', precio: 65000, descripcion: 'Elegante flor con una floración duradera y colores vibrantes.', emoji: '🌸' },
-  { id: 4, nombre: 'Pothos Dorado', categoria: 'Interior', precio: 18000, descripcion: 'Planta colgante de fácil cuidado, purifica el aire del hogar.', emoji: '🍃' },
-  { id: 5, nombre: 'Lavanda Francesa', categoria: 'Flores', precio: 22000, descripcion: 'Aromática y hermosa, perfecta para jardines y balcones.', emoji: '💜' },
-  { id: 6, nombre: 'Bambú de la Suerte', categoria: 'Interior', precio: 35000, descripcion: 'Símbolo de buena fortuna, requiere poca luz y agua.', emoji: '🎋' },
-]
-
-const categorias = ['Todas', 'Interior', 'Exterior', 'Flores']
-
 function Catalogo() {
+  const [productos, setProductos] = useState([])
+  const [categorias, setCategorias] = useState(['Todas'])
   const [busqueda, setBusqueda] = useState('')
   const [categoriaFiltro, setCategoriaFiltro] = useState('Todas')
   const [notificacion, setNotificacion] = useState('')
+  const [cargando, setCargando] = useState(true)
 
-  const productosFiltrados = productosDemo.filter(p => {
-    const coincideBusqueda = p.nombre.toLowerCase().includes(busqueda.toLowerCase())
-    const coincideCategoria = categoriaFiltro === 'Todas' || p.categoria === categoriaFiltro
-    return coincideBusqueda && coincideCategoria
-  })
+  useEffect(() => {
+    cargarProductos()
+    cargarCategorias()
+  }, [])
+
+  useEffect(() => {
+    cargarProductos()
+  }, [busqueda, categoriaFiltro])
+
+  const cargarProductos = async () => {
+    try {
+      const params = {}
+      if (busqueda) params.buscar = busqueda
+      if (categoriaFiltro !== 'Todas') params.categoria = categoriaFiltro
+      const res = await axios.get('/api/productos', { params })
+      setProductos(res.data.data)
+    } catch (err) {
+      console.error('Error cargando productos:', err)
+    } finally {
+      setCargando(false)
+    }
+  }
+
+  const cargarCategorias = async () => {
+    try {
+      const res = await axios.get('/api/productos/categorias')
+      setCategorias(['Todas', ...res.data.data])
+    } catch (err) {
+      console.error('Error cargando categorias:', err)
+    }
+  }
 
   const agregarAlCarrito = (producto) => {
     const carritoActual = JSON.parse(localStorage.getItem('carrito') || '[]')
@@ -68,11 +87,13 @@ function Catalogo() {
         </div>
       </div>
 
-      {productosFiltrados.length === 0 ? (
+      {cargando ? (
+        <div className="estado-vacio">🌿 Cargando plantas...</div>
+      ) : productos.length === 0 ? (
         <div className="estado-vacio">🍂 No se encontraron plantas con ese filtro</div>
       ) : (
         <div className="productos-grid">
-          {productosFiltrados.map(producto => (
+          {productos.map(producto => (
             <div key={producto.id} className="producto-card">
               <div className="producto-imagen">{producto.emoji}</div>
               <div className="producto-info">
@@ -80,7 +101,7 @@ function Catalogo() {
                 <h3>{producto.nombre}</h3>
                 <p>{producto.descripcion}</p>
                 <div className="producto-footer">
-                  <span className="precio">${producto.precio.toLocaleString()}</span>
+                  <span className="precio">${Number(producto.precio).toLocaleString()}</span>
                   <button className="btn-agregar" onClick={() => agregarAlCarrito(producto)} title="Agregar al carrito">
                     🛒
                   </button>
