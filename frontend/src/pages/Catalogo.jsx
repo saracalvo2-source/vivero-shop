@@ -62,6 +62,18 @@ function Catalogo() {
     }
   }
 
+  const eliminarProducto = async (id, nombre) => {
+    if (!window.confirm(`¿Eliminar ${nombre} del catálogo?`)) return
+    try {
+      await axios.delete(`/api/productos/${id}`)
+      setNotificacion(`🗑 ${nombre} eliminado`)
+      setTimeout(() => setNotificacion(''), 2500)
+      cargarProductos()
+    } catch (err) {
+      console.error('Error eliminando producto:', err)
+    }
+  }
+
   const agregarAlCarrito = (producto) => {
     const carritoActual = JSON.parse(localStorage.getItem('carrito') || '[]')
     const existe = carritoActual.find(p => p.id === producto.id)
@@ -135,9 +147,10 @@ function Catalogo() {
                   <p>{producto.descripcion}</p>
                   <div className="producto-footer">
                     <span className="precio">${Number(producto.precio).toLocaleString()}</span>
-                    <button className="btn-agregar" onClick={() => agregarAlCarrito(producto)} title="Agregar al carrito">
-                      🛒
-                    </button>
+                    <div className="footer-btns">
+                      <button className="btn-agregar" onClick={() => agregarAlCarrito(producto)} title="Agregar al carrito">🛒</button>
+                      <button className="btn-eliminar-prod" onClick={() => eliminarProducto(producto.id, producto.nombre)} title="Eliminar planta">✕</button>
+                    </div>
                   </div>
                 </div>
               </div>
