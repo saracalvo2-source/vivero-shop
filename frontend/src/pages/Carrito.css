@@ -81,6 +81,13 @@
   flex-shrink: 0;
 }
 
+.item-img {
+  width: 65px;
+  height: 65px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
 .item-info {
   flex: 1;
 }

@@ -51,12 +51,12 @@ function AgregarProducto() {
     <div className="agregar-page">
       <div className="agregar-container">
         <div className="agregar-header">
-          <h1>🌱 Agregar Planta</h1>
-          <p>Añade una nueva planta al catálogo de Varium</p>
+          <h1>Agregar Planta</h1>
+          <p>Añade una nueva planta al catálogo</p>
         </div>
 
-        {exito && <div className="alerta exito">✅ ¡Planta agregada exitosamente al catálogo!</div>}
-        {errorGeneral && <div className="alerta error-gen">❌ {errorGeneral}</div>}
+        {exito && <div className="alerta exito">Planta agregada exitosamente al catálogo</div>}
+        {errorGeneral && <div className="alerta error-gen">{errorGeneral}</div>}
 
         <form onSubmit={handleSubmit} className="form-planta" noValidate>
           <div className="campo">
@@ -118,7 +118,7 @@ function AgregarProducto() {
           </div>
 
           <button type="submit" className="btn-submit" disabled={enviando}>
-            {enviando ? '🌿 Guardando...' : '✅ Agregar Planta'}
+            {enviando ? 'Guardando...' : 'Agregar Planta'}
           </button>
         </form>
       </div>

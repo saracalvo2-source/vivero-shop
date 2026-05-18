@@ -3,6 +3,25 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 import './Carrito.css'
 
+const imagenesLocales = {
+  'monstera': '/Deliciosas.png',
+  'deliciosa': '/Deliciosas.png',
+  'cactus': '/Cactus.png',
+  'orqu': '/Orquidea.png',
+  'pothos': '/Pothos.png',
+  'lavanda': '/Lavanda.png',
+  'bamb': '/Bambu.png',
+  'rosa': '/Rosas.png',
+}
+
+const getImagen = (nombre) => {
+  const lower = nombre.toLowerCase()
+  for (const key of Object.keys(imagenesLocales)) {
+    if (lower.includes(key)) return imagenesLocales[key]
+  }
+  return null
+}
+
 function Carrito() {
   const [carrito, setCarrito] = useState([])
   const [pedidoEnviado, setPedidoEnviado] = useState(false)
@@ -74,7 +93,10 @@ function Carrito() {
           <div className="carrito-items">
             {carrito.map(item => (
               <div key={item.id} className="carrito-item">
-                <span className="item-emoji">{item.emoji}</span>
+                {getImagen(item.nombre)
+                  ? <img src={getImagen(item.nombre)} alt={item.nombre} className="item-img" />
+                  : <span className="item-emoji">{item.emoji || '🌿'}</span>
+                }
                 <div className="item-info">
                   <h3>{item.nombre}</h3>
                   <p className="item-cat">{item.categoria}</p>

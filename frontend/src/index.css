@@ -1,13 +1,15 @@
 :root {
   --bg: #060d06;
-  --card: rgba(10, 25, 10, 0.88);
+  --card: rgba(10, 25, 10, 0.75);
   --primary: #2e6b2e;
   --accent: #56b056;
-  --glow: rgba(86, 176, 86, 0.5);
+  --glow: rgba(86, 176, 86, 0.45);
   --text: #e2f0e2;
   --muted: #7aaa7a;
-  --border: rgba(86, 176, 86, 0.22);
-  --purple: rgba(110, 30, 160, 0.35);
+  --border: rgba(86, 176, 86, 0.18);
+
+  --font-heading: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Jost', system-ui, sans-serif;
 }
 
 * {
@@ -20,13 +22,21 @@ body {
   background-color: var(--bg);
   background-image:
     linear-gradient(rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.72)),
-    url('/bosque.jpg');
+    url('/bosque.mp4');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
   color: var(--text);
-  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-family: var(--font-body);
+  font-weight: 300;
+  letter-spacing: 0.02em;
   min-height: 100vh;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: 0.03em;
 }
 
 a {
@@ -38,11 +48,12 @@ button {
   cursor: pointer;
   border: none;
   outline: none;
-  font-family: inherit;
+  font-family: var(--font-body);
+  letter-spacing: 0.06em;
 }
 
 input, select, textarea {
-  font-family: inherit;
+  font-family: var(--font-body);
 }
 
 #root {

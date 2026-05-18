@@ -2,6 +2,26 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import './Catalogo.css'
 
+const imagenesLocales = {
+  'monstera': '/Deliciosas.png',
+  'deliciosa': '/Deliciosas.png',
+  'cactus': '/Cactus.png',
+  'orqu': '/Orquidea.png',
+  'pothos': '/Pothos.png',
+  'lavanda': '/Lavanda.png',
+  'bamb': '/Bambu.png',
+  'rosa': '/Rosas.png',
+  'roja': '/Rosas.png',
+}
+
+const getImagen = (nombre) => {
+  const lower = nombre.toLowerCase()
+  for (const key of Object.keys(imagenesLocales)) {
+    if (lower.includes(key)) return imagenesLocales[key]
+  }
+  return null
+}
+
 function Catalogo() {
   const [productos, setProductos] = useState([])
   const [categorias, setCategorias] = useState(['Todas'])
@@ -67,13 +87,19 @@ function Catalogo() {
       </div>
 
       <div className="catalogo-filtros">
-        <input
-          type="text"
-          placeholder="🔍 Buscar planta..."
-          value={busqueda}
-          onChange={e => setBusqueda(e.target.value)}
-          className="input-busqueda"
-        />
+        <div className="busqueda-wrapper">
+          <svg className="lupa-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input
+            type="text"
+            placeholder="Buscar planta..."
+            value={busqueda}
+            onChange={e => setBusqueda(e.target.value)}
+            className="input-busqueda"
+          />
+        </div>
         <div className="categorias-filtro">
           {categorias.map(cat => (
             <button
@@ -93,22 +119,30 @@ function Catalogo() {
         <div className="estado-vacio">🍂 No se encontraron plantas con ese filtro</div>
       ) : (
         <div className="productos-grid">
-          {productos.map(producto => (
-            <div key={producto.id} className="producto-card">
-              <div className="producto-imagen">{producto.emoji}</div>
-              <div className="producto-info">
-                <span className="producto-cat-tag">{producto.categoria}</span>
-                <h3>{producto.nombre}</h3>
-                <p>{producto.descripcion}</p>
-                <div className="producto-footer">
-                  <span className="precio">${Number(producto.precio).toLocaleString()}</span>
-                  <button className="btn-agregar" onClick={() => agregarAlCarrito(producto)} title="Agregar al carrito">
-                    🛒
-                  </button>
+          {productos.map(producto => {
+            const imagen = getImagen(producto.nombre)
+            return (
+              <div key={producto.id} className="producto-card">
+                <div className="producto-imagen">
+                  {imagen
+                    ? <img src={imagen} alt={producto.nombre} />
+                    : <span>{producto.emoji || '🌿'}</span>
+                  }
+                </div>
+                <div className="producto-info">
+                  <span className="producto-cat-tag">{producto.categoria}</span>
+                  <h3>{producto.nombre}</h3>
+                  <p>{producto.descripcion}</p>
+                  <div className="producto-footer">
+                    <span className="precio">${Number(producto.precio).toLocaleString()}</span>
+                    <button className="btn-agregar" onClick={() => agregarAlCarrito(producto)} title="Agregar al carrito">
+                      🛒
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
     </div>
